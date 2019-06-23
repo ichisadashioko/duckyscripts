@@ -1,0 +1,4 @@
+REM Open Windows command line
+GUI r
+STRING cmd
+ENTER
