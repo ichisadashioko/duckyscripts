@@ -12,10 +12,13 @@ def normalize_filename(filename):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='Inject a text file to Windows Desktop.')
-    parser.add_argument('-f', type=str, help='input file')
+    parser.add_argument('-f', type=str, default=os.path.basename(__file__), help='input file')
+    #parser.add_argument('-f', type=str, required=True, help='input file')
 
     args = parser.parse_args()
 
+    print('input_file:', args.f)
+    print(os.path.exists(args.f))
     if args.f is not None and os.path.exists(args.f):
         basename = os.path.basename(args.f)
         # create duck script
@@ -29,10 +32,14 @@ if __name__ == '__main__':
                 'STRING cmd',
                 'ENTER',
                 'DELAY 100',
+                'STRING cd Desktop',
+                'ENTER',
+                'DELAY 100',
                 'STRING notepad',
                 'ENTER',
                 'DELAY 100',
-                'F5'
+                'F5',
+                'ENTER',
             ]
             for e in cmd:
                 duck_file.write(e)
@@ -40,14 +47,18 @@ if __name__ == '__main__':
 
             for line in text_file:
                 duck_file.write('STRING ' + line)
-                duck_file.write('\n')
+                duck_file.write('\nENTER\n')
 
             cmd = [
                 'F5',
-                'CTRL-S',
+                'CTRL S',
                 'DELAY 100',
                 'STRING ' + basename,
                 'ENTER',
+                'DELAY 50',
+                'ALT-F4',
+                'DELAY 50',
+                'ALT-F4',
             ]
             
             for e in cmd:
